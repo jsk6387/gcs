@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnitySlippyMap.Map;
-using UnityEngine.UI;
+using UnitySlippyMap.MyInput;
 using UnitySlippyMap.Helpers;
 using UnitySlippyMap.UserGUI;
 using System;
@@ -8,7 +8,6 @@ namespace UnitySlippyMap.Markers
 {
     public class MarkerAction : MonoBehaviour
     {
-        
         
         /// <summary>
         /// The last raycast hit position.
@@ -19,12 +18,15 @@ namespace UnitySlippyMap.Markers
         private Rect windowDelete;
         public Rect doWindowDelete;
         private double[] pos = new double[2];
-        private double lastCameraScale;
-        private float zoomScale = 1.05f;
+        private static float zoomScale = 1.015f;
         // Use this for initialization
         void Start()
         {
-            lastCameraScale = Camera.main.transform.position.y;   
+
+            MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
+            if(map.getMarkerCnt()>1)
+                zoomScale +=  0.003f * map.getMarkerCnt();
+            
         }
         public void OnMouseUp()
         {
@@ -115,7 +117,6 @@ namespace UnitySlippyMap.Markers
         {
             //지도 움직일 때 마커의 움직임
             SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();
-
             if (UnityEngine.Input.GetMouseButton(0)&&!SLB.usingUI)
             {
 
@@ -137,7 +138,6 @@ namespace UnitySlippyMap.Markers
                         foreach (GameObject go in gos)
                         {
                             go.transform.position += new Vector3(displacement.x, 0, displacement.z);
-                            
                         }
                     }
                 }
@@ -149,23 +149,19 @@ namespace UnitySlippyMap.Markers
             }
 
             // 지도 축소, 확대할 떄 마커의 크기비율
-            if(Camera.main.transform.position.y>lastCameraScale)
+            if(MapInput.isZoom&&MapInput.lastZoomFactor<0)
             {
                 gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x * zoomScale,
-                    gameObject.transform.localScale.y *zoomScale, gameObject.transform.localScale.z *zoomScale);
+                    gameObject.transform.localScale.y * zoomScale, gameObject.transform.localScale.z * zoomScale);
                 print(gameObject.transform.localScale.x);
-
-                lastCameraScale = Camera.main.transform.position.y;
             }
-            else if(Camera.main.transform.position.y<lastCameraScale)
+            else if(MapInput.isZoom&&MapInput.lastZoomFactor>0)
             {
-                gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x *(1/zoomScale),
-                    gameObject.transform.localScale.y *(1/zoomScale), gameObject.transform.localScale.z *(1/zoomScale));
-                lastCameraScale = Camera.main.transform.position.y;
-
+                gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x / zoomScale,
+                    gameObject.transform.localScale.y / zoomScale, gameObject.transform.localScale.z / zoomScale);
                 print(gameObject.transform.localScale.x);
             }
-
+            
         }
     }
 }

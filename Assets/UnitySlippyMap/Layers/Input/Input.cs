@@ -44,8 +44,8 @@ namespace UnitySlippyMap.MyInput
 		/// <summary>
 		/// The last zoom factor.
 		/// </summary>
-		private static float	lastZoomFactor = 0.0f;
-
+		public static float	lastZoomFactor = 0.0f;
+        public static bool isZoom;
 		/// <summary>
 		/// Handles inputs on touch devices and desktop.
 		/// The <see cref="UnitySlippyMap.Map.MapBehaviour"/> instance is told to update its layers and markers once a movement is complete.
@@ -239,8 +239,10 @@ namespace UnitySlippyMap.MyInput
 			if (zooming) {			
 				map.Zoom (zoomFactor - lastZoomFactor);
 				lastZoomFactor = zoomFactor;
+                isZoom = true;
 			} else if (zoomingStopped) {
 				lastZoomFactor = 0.0f;
+                isZoom = false;
 			}
 		}
 	}

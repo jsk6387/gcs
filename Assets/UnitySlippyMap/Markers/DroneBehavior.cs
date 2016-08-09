@@ -3,7 +3,7 @@ using UnitySlippyMap.Helpers;
 using UnitySlippyMap.Map;
 using UnitySlippyMap.UserGUI;
 using UnityEngine.UI;
-using UnitySlippyMap.DroneStruct;
+using UnitySlippyMap.MyInput;
 using GcsProject.Controller;
 public class DroneBehavior : MonoBehaviour {
     public double[] dronePos = new double[2] ;   // drone 경도,위도,고도
@@ -16,9 +16,11 @@ public class DroneBehavior : MonoBehaviour {
     private static Vector3 lastHitPosition = Vector3.zero;
     private Vector3 posVec = new Vector3(0, 0, 0);  // drone 의 위치벡터
     private Text droneKey;
-	// Use this for initialization
 
-	void Start () {
+    private static float zoomScale = 1.015f;
+    // Use this for initialization
+
+    void Start () {
         //getDronePos();
         MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
         DronePanelBehavior DPB = GameObject.Find("GameObject").GetComponent<DronePanelBehavior>();
@@ -30,8 +32,10 @@ public class DroneBehavior : MonoBehaviour {
         gameObject.transform.position = posVec;      // 그 후 gameobject , 즉 드론의 위치를 vector로 설정
         droneKey = GameObject.Find("Key").GetComponent<Text>();
         droneKey.text=key.ToString();
-
-	}
+        
+        if (map.getMarkerCnt() > 1)
+            zoomScale += 0.003f * map.getMarkerCnt();
+    }
 	public void OnMouseDown()       // 드론을 마우스로 클릭했을 때 이벤트함수 
     {
         ButtonBehavior btnBehavior = GameObject.Find("GameObject").GetComponent<ButtonBehavior>();
@@ -70,6 +74,20 @@ public class DroneBehavior : MonoBehaviour {
         {
             // reset the last hit position
             lastHitPosition = Vector3.zero;
+        }
+
+        // 지도 축소, 확대할 떄 드론마커의 크기비율
+        if (MapInput.isZoom && MapInput.lastZoomFactor < 0)
+        {
+            gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x * zoomScale,
+                gameObject.transform.localScale.y * zoomScale, gameObject.transform.localScale.z * zoomScale);
+            print(gameObject.transform.localScale.x);
+        }
+        else if (MapInput.isZoom && MapInput.lastZoomFactor > 0)
+        {
+            gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x / zoomScale,
+                gameObject.transform.localScale.y / zoomScale, gameObject.transform.localScale.z / zoomScale);
+            print(gameObject.transform.localScale.x);
         }
 
     }
