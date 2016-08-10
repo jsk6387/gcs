@@ -440,7 +440,7 @@ namespace UnitySlippyMap.UserGUI
                 altTxt.text = "Altitude : " + drone.altitude+" m";
                 longTxt.text = "Longtitude : " + drone.longtitude;
                 latTxt.text = "Latitude : " + drone.latitude;
-                groundSpeed.text = "Ground Speed : " + drone.droneInfo.groundspeed*3.6+" km/h";
+                groundSpeed.text = "Ground Speed : " + (drone.droneInfo.groundspeed/100)*3.6+" km/h";
                 /*
                      * RPM 관련 데이터는 아직 정의되지 않은 상태이므로 임시 조치함
                     rpm[0].text = "RPM 1 : " + drone.droneInfo.rpm[0];

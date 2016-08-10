@@ -327,7 +327,10 @@ namespace GcsProject.Controller
             msg.parameters = param;
             manager.Push(msg);
         }
-
+        /// <summary>
+        /// key 값으로 드론 ID 요청
+        /// </summary>
+        /// <param name="key"></param>
         public void GetDroneID(int key)
         {
             byte[] id = new byte[2];
@@ -341,6 +344,12 @@ namespace GcsProject.Controller
             param[1] = id[1];
             msg.parameters = param;
             manager.Push(msg);
+        }
+
+        public Drone GetTraceInfo(int key)
+        {
+            //PositionDouble newPos = PositionIntToDouble(model.GetDrone(indexTable[key].systemId, indexTable[key].componentId).position);
+            return model.GetDrone(indexTable[key].systemId, indexTable[key].componentId);
         }
     }
 }

@@ -49,7 +49,7 @@ namespace GcsProject.Model
             printEvent = new ManualResetEvent(false);
             traceEvent = new ManualResetEvent(false);
             printTimer = new Timer(PrintDroneInfo, printEvent, 0, 250); // 250ms 단위로 실행
-            traceTimer = new Timer(OnTrace, traceEvent, 0, 1000); // 1000ms 단위로 실행
+            traceTimer = new Timer(OnTrace, traceEvent, 0, 2000); // 2000ms 단위로 실행
         }
         /// <summary>
         /// 내부 드론 리스트에 새로운 드론을 추가

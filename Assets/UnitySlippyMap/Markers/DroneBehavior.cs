@@ -51,7 +51,6 @@ public class DroneBehavior : MonoBehaviour {
 	public void OnMouseDown()       
     {
         ButtonBehavior btnBehavior = GameObject.Find("GameObject").GetComponent<ButtonBehavior>();
-        //controller = GameObject.Find("GameObject").GetComponent<GcsController>();
         controller.GetDroneInfo(key);
         btnBehavior.doClearPlan();
     }
@@ -63,7 +62,6 @@ public class DroneBehavior : MonoBehaviour {
     }
     public void OnMouseExit()
     {
-        print("exit!");
         renderWindowDrone = false;
     }
     void OnGUI()
@@ -71,7 +69,7 @@ public class DroneBehavior : MonoBehaviour {
         if(renderWindowDrone)
         {
             GUI.color = Color.cyan;
-            doWindowDrone = GUI.Window(0, new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y - 80, 180, 100), DoWindowDrone, "Drone Info");
+            doWindowDrone = GUI.Window(0, new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y - 120, 180, 100), DoWindowDrone, "Drone Info");
         }
     }
     
@@ -82,7 +80,6 @@ public class DroneBehavior : MonoBehaviour {
     }
 	// Update is called once per frame
 	void Update () {
-        print(renderWindowDrone);
         SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();  
         if (Input.GetMouseButton(0) && !SLB.usingUI)
         {
