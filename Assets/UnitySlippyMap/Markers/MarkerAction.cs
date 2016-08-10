@@ -18,7 +18,7 @@ namespace UnitySlippyMap.Markers
         private Rect windowDelete;
         public Rect doWindowDelete;
         private double[] pos = new double[2];
-        private static float zoomScale = 1.015f;
+        private static float zoomScale = 1.015f; // 마커 확대, 축소 비율
         // Use this for initialization
         void Start()
         {

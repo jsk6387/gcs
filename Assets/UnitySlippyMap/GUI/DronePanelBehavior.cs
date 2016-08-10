@@ -55,6 +55,7 @@ namespace UnitySlippyMap.UserGUI
         private InputField[] mag = new InputField[3];
         private GameObject target;
         private GameObject[] targetArr;
+        private byte[] id = new byte[2];
         private bool renderConflict = false;
         private bool renderSocketErr=false;
         #endregion
@@ -65,12 +66,12 @@ namespace UnitySlippyMap.UserGUI
             selected = 0;
             listCnt = 0;
             ipList = new List<string>() ;
-        nameList=new List<string>();
-        compList=new List<string>();
-        sysList=new List<string> ();
-        portList=new List<string> ();
-        gcsPortList=new List<string>();
-    }
+            nameList=new List<string>();
+            compList=new List<string>();
+            sysList=new List<string> ();
+            portList=new List<string> ();
+            gcsPortList=new List<string>();
+        }
         public void getLoadList(List<ConnectList.ConnectStruct> list)
         {
             foreach (var data in list)
@@ -84,17 +85,20 @@ namespace UnitySlippyMap.UserGUI
             }
             listCnt = ipList.Count;
         }
-        
+        /// <summary>
+        /// +,- 버튼 입력에 대한 이벤트
+        /// </summary>
+        /// <param name="key"></param>
         public void getKey(string key)
         {
             GcsController controller = GameObject.Find("GameObject").GetComponent<GcsController>();
             Text droneKey = GameObject.Find("Key").GetComponent<Text>();
             switch (key)
             {
-                case "+":
+                case "+":  // 드론 추가
                     renderAdd = true;
                     break;
-                case "-":
+                case "-":    // 해당 키에 대한 드론 삭제
                     controller.RemoveDrone(int.Parse(droneKey.text));
                     deleteDrone(droneKey.text);
                     setDroneInfo();
@@ -497,6 +501,20 @@ namespace UnitySlippyMap.UserGUI
             mag[1].text = "";
             mag[2].text = "";
 
+        }
+        /// <summary>
+        /// get System ID and Component ID by Key
+        /// </summary>
+        /// <param name="compID"></param>
+        /// <param name="sysID"></param>
+        public void getID(byte compID, byte sysID)
+        {
+            id[0] = sysID;
+            id[1] = compID;
+        }
+        public byte[] getID()
+        {
+            return id;
         }
     }
 }

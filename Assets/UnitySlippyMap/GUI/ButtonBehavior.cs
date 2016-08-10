@@ -139,6 +139,18 @@ namespace UnitySlippyMap.UserGUI
             map.getMarkerLong().Clear();
         }
         /// <summary>
+        /// 운행계획만 지움
+        /// </summary>
+        public void doClearPlan()
+        {
+            Map.MapBehaviour map = GameObject.Find("Test").GetComponent<Map.MapBehaviour>();
+            DeleteObjects("Marker");
+            DeleteObjects("GPSfield");
+            DeleteObjects("Order");
+            map.getMarkerLat().Clear();
+            map.getMarkerLong().Clear();
+        }
+        /// <summary>
         /// Delete Objects with Tag
         /// </summary>
         public void DeleteObjects(string tag)

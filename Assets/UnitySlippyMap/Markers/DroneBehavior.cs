@@ -12,18 +12,19 @@ public class DroneBehavior : MonoBehaviour {
     public Transform traceMarker;
     private GameObject[] gos;
     private GcsController controller;
-    private PositionDouble dronePosition;
+    private DronePanelBehavior dronePanel;
     private static Vector3 lastHitPosition = Vector3.zero;
     private Vector3 posVec = new Vector3(0, 0, 0);  // drone 의 위치벡터
     private Text droneKey;
-
-    private static float zoomScale = 1.015f;
+    private Rect doWindowDrone;
+    private bool renderWindowDrone;
+    public GUIStyle style;
+    private static float zoomScale = 1.015f; // 드론 확대, 축소 비율
     // Use this for initialization
-
+    
     void Start () {
         //getDronePos();
         MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
-        DronePanelBehavior DPB = GameObject.Find("GameObject").GetComponent<DronePanelBehavior>();
         dronePos[0]=126.88;
         dronePos[1] = 37.488;
         dronePos = GeoHelpers.WGS84ToRaycastHit(map, dronePos); //드론의 위도,경도 위치를 화면상 위치로 변환함
@@ -32,19 +33,56 @@ public class DroneBehavior : MonoBehaviour {
         gameObject.transform.position = posVec;      // 그 후 gameobject , 즉 드론의 위치를 vector로 설정
         droneKey = GameObject.Find("Key").GetComponent<Text>();
         droneKey.text=key.ToString();
-        
-        if (map.getMarkerCnt() > 1)
+        // 드론 마커 줌 크기 조정
+        if (int.Parse(droneKey.text) > 0)
             zoomScale += 0.003f * map.getMarkerCnt();
+        // guistyle color 조정
+        style.normal.textColor = Color.white;
     }
-	public void OnMouseDown()       // 드론을 마우스로 클릭했을 때 이벤트함수 
+
+    void Awake()
+    {
+        controller = GameObject.Find("GameObject").GetComponent<GcsController>();
+        dronePanel = GameObject.Find("GameObject").GetComponent<DronePanelBehavior>();
+    }
+    /// <summary>
+    /// 드론 클릭시 운행정보 창 전환
+    /// </summary>
+	public void OnMouseDown()       
     {
         ButtonBehavior btnBehavior = GameObject.Find("GameObject").GetComponent<ButtonBehavior>();
-        controller = GameObject.Find("GameObject").GetComponent<GcsController>();
+        //controller = GameObject.Find("GameObject").GetComponent<GcsController>();
         controller.GetDroneInfo(key);
-        btnBehavior.doClear();
+        btnBehavior.doClearPlan();
+    }
+
+    public void OnMouseOver()
+    {
+        controller.GetDroneID(key);
+        renderWindowDrone = true;
+    }
+    public void OnMouseExit()
+    {
+        print("exit!");
+        renderWindowDrone = false;
+    }
+    void OnGUI()
+    {
+        if(renderWindowDrone)
+        {
+            GUI.color = Color.cyan;
+            doWindowDrone = GUI.Window(0, new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y - 80, 180, 100), DoWindowDrone, "Drone Info");
+        }
+    }
+    
+    void DoWindowDrone(int WindowID)
+    {
+        GUI.Label(new Rect(20, 20, 80, 80), " Name : " + droneName + "\n System ID : " + dronePanel.getID()[0]
+                + "\n Component ID : " + dronePanel.getID()[1], style);
     }
 	// Update is called once per frame
 	void Update () {
+        print(renderWindowDrone);
         SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();  
         if (Input.GetMouseButton(0) && !SLB.usingUI)
         {
@@ -107,7 +145,6 @@ public class DroneBehavior : MonoBehaviour {
     /// <param name="pos"></param>
     public void drawTraceMarker(double[] pos)                   // trace 그리기
     {
-
         Transform marker = Instantiate(traceMarker);
         marker.name = "traceMarker_" + key;
         posVec[0] = (float)pos[0];

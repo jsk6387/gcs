@@ -906,7 +906,6 @@ namespace UnitySlippyMap.Map
 			wgs84ToEPSG900913 = ctFactory.CreateFromCoordinateSystems (GeographicCoordinateSystem.WGS84, epsg900913);
 			wgs84ToEPSG900913Transform = wgs84ToEPSG900913.MathTransform;
 			epsg900913ToWGS84Transform = wgs84ToEPSG900913Transform.Inverse ();
-            
 		}
 	
 		/// <summary>

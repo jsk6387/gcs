@@ -327,5 +327,20 @@ namespace GcsProject.Controller
             msg.parameters = param;
             manager.Push(msg);
         }
+
+        public void GetDroneID(int key)
+        {
+            byte[] id = new byte[2];
+            id[0] = indexTable[key].systemId;
+            id[1] = indexTable[key].componentId;
+
+            UIManager.UIMessage msg = new UIManager.UIMessage();
+            msg.id = UIManager.UIMessageType.SendID;
+            object[] param = new object[2];
+            param[0] = id[0];
+            param[1] = id[1];
+            msg.parameters = param;
+            manager.Push(msg);
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace UnitySlippyMap.Markers
         {
             if (renderPop)
             {
-                doWindowPop = GUI.Window(0, new Rect(Input.mousePosition.x, Input.mousePosition.y + 30, 180, 100), DoWindowPop, "Info");
+                doWindowPop = GUI.Window(0, new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y - 80, 180, 100), DoWindowPop, "Info");
             }
         }
         void DoWindowPop(int WindowID)

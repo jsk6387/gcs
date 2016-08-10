@@ -35,7 +35,8 @@ class UIManager : MonoBehaviour
         PrintDroneInfo, // 드론 운행 정보 출력 요청
         PrintPlanList, // 운행 계획 리스트 출력 요청
         ConnectedComplete, // 연결 성공에 대한 이벤트 발생 요청
-        PrintConnectList // 연결 정보 리스트를 출력
+        PrintConnectList, // 연결 정보 리스트를 출력
+        SendID  // 드론 팝업 정보 요청
     }
     public struct UIMessage
     {
@@ -106,6 +107,9 @@ class UIManager : MonoBehaviour
                 break;
             case UIMessageType.PrintConnectList:
                 dronePanel.getLoadList((List<ConnectList.ConnectStruct>)msg.parameters[0]);
+                break;
+            case UIMessageType.SendID:
+                dronePanel.getID((byte)msg.parameters[0], (byte)msg.parameters[1]);
                 break;
         }
     }
