@@ -51,7 +51,7 @@ public class SaveLoadBehavior : MonoBehaviour {
     {
         Text keyVal = GameObject.Find("Key").GetComponent<Text>();
         GcsController controller = GameObject.Find("GameObject").GetComponent<GcsController>();
-        droneKey = int.Parse(keyVal.text.Substring(6));
+        droneKey = int.Parse(keyVal.text);
         for(int i=0; i<map.getMarkerCnt();i++)
         {
             markerPos.Add(new PositionDouble(map.getMarkerLong(i), map.getMarkerLat(i), map.getMarkerAlt(i)));

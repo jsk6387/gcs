@@ -137,6 +137,7 @@ namespace UnitySlippyMap.UserGUI
             DeleteObjects("Trace");
             map.getMarkerLat().Clear();
             map.getMarkerLong().Clear();
+            map.getMarkerAlt().Clear();
         }
         /// <summary>
         /// 운행계획만 지움

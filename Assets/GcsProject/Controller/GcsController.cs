@@ -9,7 +9,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-
+using UnitySlippyMap.Map;
 namespace GcsProject.Controller
 {
     /// <summary>
@@ -18,6 +18,7 @@ namespace GcsProject.Controller
     class GcsController : MonoBehaviour
     {
         private UIManager manager; // UI로 데이터를 전달하기 위한 참조
+        private MapBehaviour map;
         /// <summary>
         /// 연결 시도 반환 값
         /// </summary>
@@ -47,6 +48,7 @@ namespace GcsProject.Controller
             model = new GcsModel(this);
             indexTable = new Dictionary<int, IDStruct>();
             manager = GameObject.Find("GameObject").GetComponent<UIManager>();
+            map = GameObject.Find("Test").GetComponent<MapBehaviour>();
         }
         /// <summary>
         /// 드론에 연결을 시도함
@@ -251,6 +253,7 @@ namespace GcsProject.Controller
                 msg.parameters = param;
                 manager.Push(msg);
             }
+            map.setListCnt(0); // 운행 계획 리스트 출력 후 카운트를 초기화 해 주어야 함
         }
         /// <summary>
         /// GPS 좌표값을 int에서 double 형태로 변환함

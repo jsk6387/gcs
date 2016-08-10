@@ -100,7 +100,6 @@ class UIManager : MonoBehaviour
                 break;
             case UIMessageType.PrintPlanList:
                 mapBehavior.drawGPSInfo((PositionDouble)msg.parameters[0]);
-                mapBehavior.setListCnt(0); // 운행 계획 리스트 출력 후 카운트를 초기화 해 주어야 함
                     break;
             case UIMessageType.ConnectedComplete:
                 dronePanel.connectComplete((int)msg.parameters[0]);

@@ -23,7 +23,6 @@ namespace UnitySlippyMap.Markers
             key = int.Parse(gameObject.name.Split('_')[1]);
             controller = GameObject.Find("GameObject").GetComponent<GcsController>();
             style.normal.textColor = Color.white;
-            print(key);
             longtitude = controller.GetTraceInfo(key).position.longitude/1E7;
             latitude = controller.GetTraceInfo(key).position.latitude/1E7;
             altitude= controller.GetTraceInfo(key).position.altitude/1000;

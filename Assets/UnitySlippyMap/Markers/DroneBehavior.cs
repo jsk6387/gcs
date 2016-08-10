@@ -13,6 +13,7 @@ public class DroneBehavior : MonoBehaviour {
     private GameObject[] gos;
     private GcsController controller;
     private DronePanelBehavior dronePanel;
+    private ButtonBehavior btnBehavior;
     private static Vector3 lastHitPosition = Vector3.zero;
     private Vector3 posVec = new Vector3(0, 0, 0);  // drone 의 위치벡터
     private Text droneKey;
@@ -31,8 +32,7 @@ public class DroneBehavior : MonoBehaviour {
         posVec[0] = (float)dronePos[0];      // vector에 드론 위치 하나씩 저장 x : 경도 ,z : 위도 
         posVec[2] = (float)dronePos[1];
         gameObject.transform.position = posVec;      // 그 후 gameobject , 즉 드론의 위치를 vector로 설정
-        droneKey = GameObject.Find("Key").GetComponent<Text>();
-        droneKey.text=key.ToString();
+        
         // 드론 마커 줌 크기 조정
         if (int.Parse(droneKey.text) > 0)
             zoomScale += 0.003f * map.getMarkerCnt();
@@ -44,15 +44,19 @@ public class DroneBehavior : MonoBehaviour {
     {
         controller = GameObject.Find("GameObject").GetComponent<GcsController>();
         dronePanel = GameObject.Find("GameObject").GetComponent<DronePanelBehavior>();
+        btnBehavior = GameObject.Find("GameObject").GetComponent<ButtonBehavior>();
+        droneKey = GameObject.Find("Key").GetComponent<Text>();
+        droneKey.text = key.ToString();
+        print(droneKey);
     }
     /// <summary>
     /// 드론 클릭시 운행정보 창 전환
     /// </summary>
 	public void OnMouseDown()       
     {
-        ButtonBehavior btnBehavior = GameObject.Find("GameObject").GetComponent<ButtonBehavior>();
         controller.GetDroneInfo(key);
         btnBehavior.doClearPlan();
+        droneKey.text = key.ToString();
     }
 
     public void OnMouseOver()

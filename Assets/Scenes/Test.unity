@@ -2833,7 +2833,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2100056682}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.4104872
+  m_Size: 0.53353274
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3245,7 +3245,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 92232512}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.40872055
+  m_Size: 0.53176606
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3395,6 +3395,12 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
+  doWindowLoad:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   style:
     m_Name: 
     m_Normal:
@@ -3454,8 +3460,7 @@ MonoBehaviour:
     m_FixedHeight: 0
     m_StretchWidth: 1
     m_StretchHeight: 0
-  skin: {fileID: 0}
-  droneMarker: {fileID: 464976, guid: afe5b7fbc34be6547bc7e2a6bfbc0bbe, type: 2}
+  droneMarker: {fileID: 487380, guid: afe5b7fbc34be6547bc7e2a6bfbc0bbe, type: 2}
 --- !u!114 &832452034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8077,7 +8082,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

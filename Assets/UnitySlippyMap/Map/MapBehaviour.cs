@@ -1120,7 +1120,7 @@ namespace UnitySlippyMap.Map
             vecMarker[2] = (float)posArr[1];
             newMarker.position = vecMarker;
             saveMarker(posArr);
-            markerAlt[markerAlt.LastIndexOf(100)] = pos.altitude;
+            markerAlt.Add(pos.altitude);
         }
         /// <summary>
         /// draw Marker GPS information in the List
@@ -1193,7 +1193,7 @@ namespace UnitySlippyMap.Map
             pos[1] = Math.Round(pos[1], 6, MidpointRounding.AwayFromZero);
             markerLong.Add(pos[0]);
             markerLat.Add(pos[1]);
-            markerAlt.Add(100);
+            markerAlt.Add(100.0d);
         }
         #endregion
 
