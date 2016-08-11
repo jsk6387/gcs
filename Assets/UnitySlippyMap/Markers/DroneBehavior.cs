@@ -20,7 +20,7 @@ public class DroneBehavior : MonoBehaviour {
     private Rect doWindowDrone;
     private bool renderWindowDrone;
     public GUIStyle style;
-    private static float zoomScale = 1.015f; // 드론 확대, 축소 비율
+    private static float zoomScale = 1.02f; // 드론 확대, 축소 비율
     // Use this for initialization
     
     void Start () {

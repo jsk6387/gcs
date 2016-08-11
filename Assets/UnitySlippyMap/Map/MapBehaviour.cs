@@ -1113,13 +1113,13 @@ namespace UnitySlippyMap.Map
             double[] posArr=new double[2];
             posArr[0] = pos.longitude;
             posArr[1] = pos.latitude;
+            saveMarker(posArr);
             Transform newMarker = Instantiate(marker);
             Vector3 vecMarker = new Vector3(0, 0, 0);
             posArr = GeoHelpers.WGS84ToRaycastHit(this, posArr);
             vecMarker[0] = (float)posArr[0];
             vecMarker[2] = (float)posArr[1];
             newMarker.position = vecMarker;
-            saveMarker(posArr);
             markerAlt.Add(pos.altitude);
         }
         /// <summary>

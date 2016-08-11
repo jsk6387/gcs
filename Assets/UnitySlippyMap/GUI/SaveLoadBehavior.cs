@@ -57,6 +57,7 @@ public class SaveLoadBehavior : MonoBehaviour {
             markerPos.Add(new PositionDouble(map.getMarkerLong(i), map.getMarkerLat(i), map.getMarkerAlt(i)));
         }
        controller.SetPlan(droneKey, markerPos);
+       markerPos.Clear();
     }
     void OnGUI()
     {

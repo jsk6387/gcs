@@ -20,7 +20,6 @@ public class InputFieldBehavior : MonoBehaviour {
     void ChangeInput(InputField input)
     {
         MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
-        print(gameObject.transform.localPosition.x);
         if (gameObject.transform.localPosition.x == 140)    //Long 값이 바뀔 때
             setMarkerLong(map, input);
         else if (gameObject.transform.localPosition.x == 240)   //Lat 값이 바뀔 때
@@ -33,7 +32,7 @@ public class InputFieldBehavior : MonoBehaviour {
     public void setMarkerAlt(MapBehaviour map,InputField input)
     {
         index = (int)((gameObject.transform.localPosition.y + 17) / (-map.getContentRowNum()));
-        map.getMarkerAlt()[index] = input.text;
+        map.getMarkerAlt()[index] =double.Parse( input.text);
     }
     public void setMarkerLat(MapBehaviour map,InputField input)
     {
@@ -77,7 +76,7 @@ public class InputFieldBehavior : MonoBehaviour {
                     {
                         Destroy(go);
                         map.drawMarker(pos);
-                        print(pos[0]);
+                       // print(pos[0]);
                     }
                     break;
                 case 2: //Latitude changed
@@ -86,7 +85,7 @@ public class InputFieldBehavior : MonoBehaviour {
                     {
                         Destroy(go);
                         map.drawMarker(pos);
-                        print(pos[1]);
+                        //print(pos[1]);
                     }
                     break;
             }

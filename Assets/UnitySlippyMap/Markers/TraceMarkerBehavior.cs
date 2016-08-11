@@ -44,6 +44,7 @@ namespace UnitySlippyMap.Markers
         {
             if (renderPop)
             {
+                GUI.color = Color.cyan;
                 doWindowPop = GUI.Window(0, new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y - 120, 180, 100), DoWindowPop, "Info");
             }
         }
