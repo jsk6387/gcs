@@ -344,9 +344,11 @@ namespace UnitySlippyMap.UserGUI
             SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();
             GcsController controller = GameObject.Find("GameObject").GetComponent<GcsController>();
             drawDroneMarker(droneKey);
-            controller.AddConnectList(saveDrone());
-            SLB.usingUI = false;
-            renderConnect = false; //창 닫음
+            if(controller.AddConnectList(saveDrone()))
+            {
+                SLB.usingUI = false;
+                renderConnect = false; //창 닫음
+            }
         }
         /// <summary>
         /// 연결 성공시 자동으로 드론을 저장
@@ -375,9 +377,7 @@ namespace UnitySlippyMap.UserGUI
             newDrone.name = "drone_" + droneKey;
             DroneBehavior droneBehavior = newDrone.GetComponent<DroneBehavior>();
             droneBehavior.key = droneKey;
-            print(droneName);
             droneBehavior.droneName = droneName;
-            droneName = "";
         }
 
         /// <summary>

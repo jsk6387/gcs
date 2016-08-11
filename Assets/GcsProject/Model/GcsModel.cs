@@ -8,6 +8,7 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.Text;
 using System;
+using System.IO;
 
 namespace GcsProject.Model
 {
@@ -40,7 +41,7 @@ namespace GcsProject.Model
         Timer traceTimer = null; // 드론 자취 기록 타이머
         ManualResetEvent printEvent;
         ManualResetEvent traceEvent;
-        private string connectFileName = "connect.ini"; // 연결 정보 파일명
+        private string connectFileName = "D:\\connect.ini"; // 연결 정보 파일명
 
         public GcsModel(GcsController controller)
         {
@@ -334,7 +335,8 @@ namespace GcsProject.Model
         {
             if (section.Equals("__currentDate")) // 현재 일시를 기준으로 섹션명을 생성
             {
-                section = DateTime.Now.ToString("yyyyMMddHHmmss");
+                section = DateTime.Now.ToString("yyyyMMddHHmm");
+                
             }
             try
             {
@@ -351,7 +353,7 @@ namespace GcsProject.Model
                 return false;
             }
         }
-        // ini 파일 입출력을 위한 API
+        // ini 파일 입출력을 위한 API 
         [DllImport("kernel32")]
         private static extern long WritePrivateProfileString(string section, 
                                                              string key, 
