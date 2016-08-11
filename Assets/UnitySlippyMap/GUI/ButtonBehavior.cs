@@ -10,7 +10,6 @@ namespace UnitySlippyMap.UserGUI
     {
         #region Variables
         public static ButtonBehavior instance=null;
-        float rotateAngle = 0.1f;
         public bool isRightDown;
         public bool isLeftDown;
         public bool isZoomIn;
@@ -19,9 +18,6 @@ namespace UnitySlippyMap.UserGUI
         private GameObject[] gos;
         private float downTime;
         private int i = 0;
-        private float destinationAngle;
-        private float perspectiveAngle;
-        private float animationStartTime;
         public Rect doWindow0;
         public static bool render = false;
         public string str = "";
@@ -114,8 +110,8 @@ namespace UnitySlippyMap.UserGUI
                             map.CenterEPSG900913 [0],
                             map.CenterEPSG900913 [1]
                         };
-                    centerMeters[0] -= displacementMeters[0];
-                    centerMeters[1] -= displacementMeters[1];
+                    centerMeters[0] += displacementMeters[0];
+                    centerMeters[1] += displacementMeters[1];
                     map.CenterEPSG900913 = centerMeters;
 #if DEBUG_LOG
     					Debug.Log("DEBUG: Map.Update: new centerWGS84 wgs84: " + centerWGS84[0] + ", " + centerWGS84[1]);
