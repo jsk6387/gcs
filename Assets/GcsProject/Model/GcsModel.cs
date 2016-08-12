@@ -289,8 +289,8 @@ namespace GcsProject.Model
                 {
                     return false;
                 }
-                controller.PrintConnectList(list);
             }
+            controller.PrintConnectList(list);
             return true;
         }
         /// <summary>
@@ -336,7 +336,6 @@ namespace GcsProject.Model
             if (section.Equals("__currentDate")) // 현재 일시를 기준으로 섹션명을 생성
             {
                 section = DateTime.Now.ToString("yyyyMMddHHmm");
-                
             }
             try
             {

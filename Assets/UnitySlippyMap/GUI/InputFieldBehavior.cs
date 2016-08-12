@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System;
 using UnitySlippyMap.Map;
 using UnityEngine.UI;
@@ -17,6 +16,10 @@ public class InputFieldBehavior : MonoBehaviour {
         input = gameObject.GetComponent<InputField>();
         input.onEndEdit.AddListener(delegate { ChangeInput(input); });
     }
+    /// <summary>
+    /// inputField의 값이 변경될때 이벤트
+    /// </summary>
+    /// <param name="input"></param>
     void ChangeInput(InputField input)
     {
         MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
@@ -29,11 +32,21 @@ public class InputFieldBehavior : MonoBehaviour {
             setMarkerAlt(map,input);
         }
     }
+    /// <summary>
+    /// 마커의 고도변경시 고도설정
+    /// </summary>
+    /// <param name="map"></param>
+    /// <param name="input"></param>
     public void setMarkerAlt(MapBehaviour map,InputField input)
     {
         index = (int)((gameObject.transform.localPosition.y + 17) / (-map.getContentRowNum()));
         map.getMarkerAlt()[index] =double.Parse( input.text);
     }
+    /// <summary>
+    /// 마커의 위도변경시 위도설정
+    /// </summary>
+    /// <param name="map"></param>
+    /// <param name="input"></param>
     public void setMarkerLat(MapBehaviour map,InputField input)
     {
         index = (int)((gameObject.transform.localPosition.y + 17) / (-map.getContentRowNum()));// 값이 수정된 textfield의 index얻기
@@ -44,6 +57,11 @@ public class InputFieldBehavior : MonoBehaviour {
         map.getMarkerLat()[index] = Math.Round(double.Parse(input.text), 6, MidpointRounding.AwayFromZero);
         setMarkerPos(map, index,exPos, 2);
     }
+    /// <summary>
+    /// 마커의 경도변경시 경도설정
+    /// </summary>
+    /// <param name="map"></param>
+    /// <param name="input"></param>
     public void setMarkerLong(MapBehaviour map,InputField input)
     {
         index = (int)((gameObject.transform.localPosition.y + 17) / (-map.getContentRowNum()));// 값이 수정된 textfield의 index얻기

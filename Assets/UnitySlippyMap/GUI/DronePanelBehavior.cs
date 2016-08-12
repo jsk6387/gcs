@@ -19,7 +19,8 @@ namespace UnitySlippyMap.UserGUI
         public Rect doWindowConnect; // 드론 연결 창
         public Rect doWindowWarnings; // 경고 창
         public Rect doWindowLoad; // Load 창
-        public GUIStyle style;  
+        public GUIStyle style;
+        private GcsController controller;
         public Transform droneMarker;
         private static bool renderAdd = false;       //드론추가창을 on/off
         private static bool renderConnect = false;
@@ -72,6 +73,10 @@ namespace UnitySlippyMap.UserGUI
             portList=new List<string> ();
             gcsPortList=new List<string>();
         }
+        void Awake()
+        {
+            controller = GameObject.Find("GameObject").GetComponent<GcsController>();
+        }
         public void getLoadList(List<ConnectList.ConnectStruct> list)
         {
             foreach (var data in list)
@@ -91,7 +96,6 @@ namespace UnitySlippyMap.UserGUI
         /// <param name="key"></param>
         public void getKey(string key)
         {
-            GcsController controller = GameObject.Find("GameObject").GetComponent<GcsController>();
             Text droneKey = GameObject.Find("Key").GetComponent<Text>();
             switch (key)
             {
@@ -199,8 +203,12 @@ namespace UnitySlippyMap.UserGUI
             gcsPort = GUI.TextField(new Rect(220, 90, 50, 20), gcsPort);
             if(GUI.Button(new Rect(70,120,50,20),"Load"))
             {
-                renderAdd = false;
-                renderLoadList=true;
+                if (controller.GetConnectList())
+                {
+                    print(listCnt);
+                    renderAdd = false;
+                    renderLoadList = true;
+                }
             }
             if (GUI.Button(new Rect(130, 120, 40, 20), "Add"))   //Add버튼누를 때
             {
@@ -229,13 +237,24 @@ namespace UnitySlippyMap.UserGUI
             gcsPort = "";
         }
         /// <summary>
+        /// Inlitiallize Load List
+        /// </summary>
+        public void initLoad()
+        {
+            ipList.Clear();
+            nameList.Clear();
+            compList.Clear();
+            sysList.Clear();
+            portList.Clear();
+            gcsPortList.Clear();
+        }
+        /// <summary>
         /// display Connecting windows
         /// </summary>
         /// <param name="WindowID"></param>
         void DoWindowConnect(int WindowID)      // 연결중뜨는 창
         {
             SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();
-            GcsController controller =GameObject.Find("GameObject").GetComponent<GcsController>();
             if (runOnce)
             {
                 SLB.usingUI = true;
@@ -327,6 +346,7 @@ namespace UnitySlippyMap.UserGUI
                 gcsPort = gcsPortList[selected];
                 renderLoadList = false;
                 renderAdd = true;
+                initLoad();
             }
         }
        
@@ -342,7 +362,6 @@ namespace UnitySlippyMap.UserGUI
         public void connectComplete(int droneKey)
         {
             SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();
-            GcsController controller = GameObject.Find("GameObject").GetComponent<GcsController>();
             drawDroneMarker(droneKey);
             if(controller.AddConnectList(saveDrone()))
             {
