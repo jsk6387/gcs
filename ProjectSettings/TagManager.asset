@@ -9,6 +9,7 @@ TagManager:
   - Marker
   - Drone
   - Trace
+  - Drone List Field
   layers:
   - Default
   - TransparentFX

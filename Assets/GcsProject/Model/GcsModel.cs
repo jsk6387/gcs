@@ -74,6 +74,7 @@ namespace GcsProject.Model
                 DroneStruct ds = new DroneStruct();
                 ds.drone = drone;
                 ds.connector = connector;
+                
                 droneList.Add(ds);
                 // 운행 정보 참조가 등록되어있지 않으면, 등록을 해줌
                 if (printDrone == null)
@@ -100,7 +101,7 @@ namespace GcsProject.Model
             return result;
         }
         /// <summary>
-        /// 내부 드론 리스트의 드론 객체를 교체함
+        /// 내부 드론 리스트의 드론 객체를 교체함t
         /// </summary>
         /// <param name="drone">교체할 드론의 데이터</param>
         /// <param name="index">특정 위치에 추가할 경우 사용하는 위치 지정 인덱스</param>
@@ -149,6 +150,24 @@ namespace GcsProject.Model
                 if (droneList[i].drone.id == systemId && droneList[i].drone.componentId == componentId)
                 {
                     return droneList[i].drone;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 선택한 드론 커넥터 객체를 반환함. 실패시 null 반환
+        /// </summary>
+        /// <param name="systemId"></param>
+        /// <param name="componentId"></param>
+        /// <returns></returns>
+        public Connector GetDroneConnecter(byte systemId, byte componentId)
+        {
+            for(int i=0;i<droneList.Count;i++)
+            {
+                if(droneList[i].drone.id==systemId && droneList[i].drone.componentId==componentId)
+                {
+                    return droneList[i].connector;
                 }
             }
             return null;

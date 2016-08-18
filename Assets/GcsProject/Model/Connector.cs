@@ -155,6 +155,15 @@ namespace GcsProject.Model
                         udp.SendMessage(msg);
                         break;
                     }
+                case 21: // PARAM_REQUEST_LIST
+                    {
+                        UasParamRequestList msg = new UasParamRequestList();
+                        msg.TargetSystem = (byte)values[0];
+                        msg.TargetComponent = (byte)values[1];
+                        udp.SendMessage(msg);
+                        break;
+                    }
+
                 case 23: // PARAM_SET (target_system, target_component, param_id, param_value, param_type)
                     {
                         UasParamSet msg = new UasParamSet();
@@ -165,6 +174,100 @@ namespace GcsProject.Model
                         msg.ParamValue = (float)values[3];
                         msg.ParamType = (MavParamType)values[4];
                         udp.SendMessage(msg);
+                        break;
+                       
+                    }
+                case 39: // MISSOIN_ITEM
+                    {
+                        UasMissionItem msg = new UasMissionItem();
+                        msg.TargetSystem = (byte)values[0];
+                        msg.TargetComponent = (byte)values[1];
+                        msg.Seq = (ushort)values[2];
+                        msg.Frame = (MavFrame)values[3];
+                        msg.Command = (MavCmd)values[4];
+                        msg.Current = (byte)values[5];
+                        msg.Autocontinue = (byte)values[6];
+                        msg.Param1 = (float)values[7];
+                        msg.Param4 = (float)values[10];
+                        msg.X = (Int32)values[11];
+                        msg.Y = (Int32)values[12];
+                        msg.Z = (float)values[13];
+                        udp.SendMessage(msg);
+                        break;
+                    }
+                case 73: // MISSION_INT
+                    {
+                        UasMissionItemInt msg = new UasMissionItemInt();
+                        msg.TargetSystem = (byte)values[0];
+                        msg.TargetComponent = (byte)values[1];
+                        msg.Seq = (ushort)values[2];
+                        msg.Frame = (MavFrame)values[3];
+                        msg.Command = (MavCmd)values[4];
+                        msg.Current = (byte)values[5];
+                        msg.Autocontinue = (byte)values[6];
+                        msg.Param1 = (float)values[7];
+                        msg.Param4 = (float)values[10];
+                        msg.X = (Int32)values[11];
+                        msg.Y = (Int32)values[12];
+                        msg.Z = (float)values[13];
+                        udp.SendMessage(msg);
+                        break;
+                    }
+                case 75:    //COMMAND_INT 
+                    {
+                        UasCommandInt msg = new UasCommandInt();
+                        msg.TargetSystem = (byte)values[0];
+                        msg.TargetComponent = (byte)values[1];
+                        msg.Frame = (MavFrame)values[2];
+                        msg.Command = (MavCmd)values[3];
+                        msg.Current = (byte)values[4];
+                        msg.Autocontinue = (byte)values[5];
+                        /*msg.Param1 = (byte)values[6];
+                        msg.Param4 = (byte)values[9];
+                        msg.X = (Int32)values[10];
+                        msg.Y = (Int32)values[11];*/
+                        msg.Z = (float)values[12];
+                        udp.SendMessage(msg);
+                        break;
+                    }
+                case 76: // COMMAND_LONG (target_System,target_componenet, command, confirmation, param 1 ~ 7)
+                    {
+                        UasCommandLong msg = new UasCommandLong();
+                        msg.TargetSystem = (byte)values[0];
+                        msg.TargetComponent = (byte)values[1];
+                        msg.Command = (MavCmd)values[2];
+                        msg.Confirmation = (byte)values[3];
+                        msg.Param1 = (float)values[4];
+                        msg.Param2 = (float)values[5];
+                        msg.Param4 = (float)values[7];
+                        msg.Param5 = (float)values[8];
+                        msg.Param6 = (float)values[9];
+                        msg.Param7 = (float)values[10];
+                        udp.SendMessage(msg);
+                        break;
+                    }
+                case 77:  //COMMAND_ACK
+                    {
+                        UasCommandAck msg = new UasCommandAck();
+                        msg.Command =(MavCmd) values[0];
+                        msg.Result = (MavResult)values[1];
+                        udp.SendMessage(msg);
+                        break;
+                    }
+                case 91:
+                    {
+                        UasHilControls msg = new UasHilControls();
+                        msg.TimeUsec = (ulong)values[0];
+                        msg.RollAilerons = (float)values[1];
+                        msg.PitchElevator = (float)values[2];
+                        msg.YawRudder = (float)values[3];
+                        msg.Throttle = (float)values[4];
+                        msg.Aux1 = (float)values[5];
+                        msg.Aux2 = (float)values[6];
+                        msg.Aux3 = (float)values[7];
+                        msg.Aux4 = (float)values[8];
+                        msg.Mode = (MavMode)values[9];
+                        msg.NavMode = (byte)values[10];
                         break;
                     }
                 default:

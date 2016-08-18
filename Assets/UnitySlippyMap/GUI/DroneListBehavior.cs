@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnitySlippyMap.UserGUI;
 using UnityEngine.UI;
 using UnitySlippyMap.Helpers;
 using UnitySlippyMap.Map;
 public class DroneListBehavior : MonoBehaviour {
 
-
+    private ButtonBehavior btnBehavior;
     private int droneNum;   // 지도상의 드론 갯수 
     private int exNum;      // exDroneNum
     private GameObject[] drones;
@@ -15,15 +15,20 @@ public class DroneListBehavior : MonoBehaviour {
         droneNum = 0;
         exNum = -1;
 	}
-	
+	void Awake()
+    {
+        btnBehavior = GameObject.Find("Clear").GetComponent<ButtonBehavior>();
+    }
 	// Update is called once per frame
 	void Update () {
         drones = GameObject.FindGameObjectsWithTag("Drone");
         droneNum = drones.Length;
         if (droneNum > 0 && droneNum != exNum)
         {
+            btnBehavior.DeleteObjects("Drone List Field");
             exNum = droneNum;
-            drawDroneList(drones, droneNum);
+            for (int droneCnt = 1; droneCnt <= droneNum; droneCnt++)
+            { drawDroneList(drones, droneCnt); }
         }
 	}
     /// <summary>

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using UnitySlippyMap.Map;
+using MavLinkNet;
 namespace GcsProject.Controller
 {
     /// <summary>
@@ -348,11 +349,155 @@ namespace GcsProject.Controller
             msg.parameters = param;
             manager.Push(msg);
         }
-
+        /// <summary>
+        /// trace Marker 정보 출력 요청
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public Drone GetTraceInfo(int key)
         {
             //PositionDouble newPos = PositionIntToDouble(model.GetDrone(indexTable[key].systemId, indexTable[key].componentId).position);
             return model.GetDrone(indexTable[key].systemId, indexTable[key].componentId);
         }
+
+        public void CmdTakeOff(int key)
+        {/*
+             byte systemId = indexTable[key].systemId;
+             byte componentId = indexTable[key].componentId;
+             object[] param = new object[13];
+            param[0] = MavCmd.ComponentArmDisarm;
+            param[1] = MavResult.Accepted;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(77, param);
+            param[0] = systemId;
+             param[1] = componentId;
+             param[2] = MavCmd.NavTakeoff;
+             param[3] = (byte)0;
+             param[4] = (byte)1;      // minimum pitch
+             param[5] = null;
+             param[6] = (byte)30;
+             param[7] = (byte)1;         // yaw angle
+             param[8] = (byte)model.GetDrone(systemId, componentId).position.latitude;
+             param[9] = (byte)model.GetDrone(systemId, componentId).position.longitude;
+             param[10] =(byte)(model.GetDrone(systemId, componentId).position.altitude+50*1000);
+
+            model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
+            /*
+             byte systemId = indexTable[key].systemId;
+             byte componentId = indexTable[key].componentId;
+             object[] param = new object[13];
+             param[0] = systemId;
+             param[1] = componentId;
+             param[2] = MavFrame.Global;
+             param[3] = MavCmd.NavTakeoff;
+             param[4] = (byte)1;     //current
+             param[5] = (byte)0;     // autocontinue
+             param[6] = (byte)1;      // minimum pitch
+             param[7] = null;
+             param[8] = (byte)30;
+             param[9] = (byte)1;         // yaw angle
+             param[10] = model.GetDrone(systemId, componentId).position.latitude;
+             param[11] = model.GetDrone(systemId, componentId).position.longitude;
+             param[12] =(float)model.GetDrone(systemId, componentId).position.altitude+50*1000f;
+             model.GetDroneConnecter(systemId, componentId).SendMessage(75, param);
+             */
+           
+
+            byte systemId = indexTable[key].systemId;
+            byte componentId = indexTable[key].componentId;
+            object[] param = new object[14];
+            /*
+            param[0] = (ulong)0;
+            param[1] = 0f;
+            param[2] = 0f;
+            param[3] = 0f;
+            param[4] = 0f;
+            param[5] = (float)0;
+            param[6] = 0f;
+            param[7] = 0f;
+            param[8] = 0f;
+            param[9] = MavMode.StabilizeArmed;
+            param[10] = (byte)0;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(91, param);
+            
+            
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = (ushort)0;
+            param[3] = MavFrame.Global;
+            param[4] = MavCmd.NavTakeoff;
+            param[5] = (byte)1;     //current
+            param[6] = (byte)1;     // autocontinue
+            param[7] = (float)1;      // minimum pitch
+            param[8] = null;
+            param[9] = (byte)30;
+            param[10] = (float)1;         // yaw angle
+            param[11] = model.GetDrone(systemId, componentId).position.latitude;
+            param[12] = model.GetDrone(systemId, componentId).position.longitude;
+            param[13] = (float)model.GetDrone(systemId, componentId).position.altitude + 50 * 1000f;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(39, param);
+            
+
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = MavCmd.MissionStart;
+            param[3] = (byte)0;     //confirmation
+            param[4] = 0f;
+            param[5] = 0f;
+            param[6] = 0f;
+            param[7] = 0f;
+            param[8] = 0f;
+            param[9] = 0f;
+            param[10] = 0f;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
+            */
+
+            param[0] = systemId;
+            param[1] = componentId;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(21, param);
+            
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = "FS_THR_ENABLE";
+            param[3] = (float)0;
+            param[4] = MavParamType.Int32;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(23, param);
+            /*
+            param[2] = "ARMING_CHECK";
+            param[3] = (float)0;
+            param[4] = MavParamType.Int32;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(23, param);
+
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = (ushort)0;
+            param[3] = MavFrame.Global;
+            param[4] = MavCmd.NavTakeoff;
+            param[5] = (byte)1;     //current
+            param[6] = (byte)1;     // autocontinue
+            param[7] = (float)1;      // minimum pitch
+            param[8] = null;
+            param[9] = (byte)30;
+            param[10] = (float)1;         // yaw angle
+            param[11] = model.GetDrone(systemId, componentId).position.latitude;
+            param[12] = model.GetDrone(systemId, componentId).position.longitude;
+            param[13] = (float)model.GetDrone(systemId, componentId).position.altitude + 50 * 1000f;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(39, param);
+
+
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = MavCmd.MissionStart;
+            param[3] = (byte)0;     //confirmation
+            param[4] = 0f;
+            param[5] = 0f;
+            param[6] = 0f;
+            param[7] = 0f;
+            param[8] = 0f;
+            param[9] = 0f;
+            param[10] = 0f;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
+            */
+        }
+
     }
 }

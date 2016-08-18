@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnitySlippyMap.Map;
-using UnitySlippyMap.Markers;
 using GcsProject.Controller;
 using UnitySlippyMap.UserGUI;
 using UnityEngine.UI;
@@ -27,7 +26,10 @@ public class SaveLoadBehavior : MonoBehaviour {
     public void getKey(int key)
     {
         MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
-        switch(key)
+        GcsController controller = GameObject.Find("GameObject").GetComponent<GcsController>();
+
+        Text keyVal = GameObject.Find("Key").GetComponent<Text>();
+        switch (key)
         {
             case 1: // Save
                 renderSave = true;
@@ -39,6 +41,9 @@ public class SaveLoadBehavior : MonoBehaviour {
                 break;
             case 3: //Apply
                 sendPlan(map);
+                break;
+            case 4:
+                controller.CmdTakeOff(int.Parse(keyVal.text));
                 break;
 
         }

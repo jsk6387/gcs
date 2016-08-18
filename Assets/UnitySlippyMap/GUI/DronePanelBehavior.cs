@@ -522,7 +522,7 @@ namespace UnitySlippyMap.UserGUI
 
         }
         /// <summary>
-        /// get System ID and Component ID by Key
+        /// get System ID and Component into dronepanel
         /// </summary>
         /// <param name="compID"></param>
         /// <param name="sysID"></param>
