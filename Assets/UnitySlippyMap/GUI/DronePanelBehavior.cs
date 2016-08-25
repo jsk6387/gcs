@@ -96,15 +96,15 @@ namespace UnitySlippyMap.UserGUI
         /// <param name="key"></param>
         public void getKey(string key)
         {
-            Text droneKey = GameObject.Find("Key").GetComponent<Text>();
+            Text droneKeyField = GameObject.Find("Key").GetComponent<Text>();
             switch (key)
             {
                 case "+":  // 드론 추가
                     renderAdd = true;
                     break;
                 case "-":    // 해당 키에 대한 드론 삭제
-                    controller.RemoveDrone(int.Parse(droneKey.text));
-                    deleteDrone(droneKey.text);
+                    controller.RemoveDrone(int.Parse(droneKeyField.text));
+                    deleteDrone(droneKeyField.text);
                     setDroneInfo();
                     break;
             }
@@ -390,10 +390,12 @@ namespace UnitySlippyMap.UserGUI
         /// </summary>
         public void drawDroneMarker(int droneKey)
         {
+            Text droneKeyField = GameObject.Find("Key").GetComponent<Text>();
             Transform newDrone = Instantiate(droneMarker);  // droneMarker 생성. 
             Vector3 vec = new Vector3(0, 0, 0);
             newDrone.transform.position = vec;
             newDrone.name = "drone_" + droneKey;
+            droneKeyField.text = droneKey+"";
             DroneBehavior droneBehavior = newDrone.GetComponent<DroneBehavior>();
             droneBehavior.key = droneKey;
             droneBehavior.droneName = droneName;

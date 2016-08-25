@@ -5,6 +5,7 @@
 using GcsProject.Controller;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text;
 using System;
@@ -37,10 +38,13 @@ namespace GcsProject.Model
         protected List<DroneStruct> droneList; // 드론 정보 리스트
         private Drone printDrone = null; // UI에 운행 정보를 출력하는 드론의 참조
         private GcsController controller = null;
+        private static object locker = new object();
         Timer printTimer = null; // 드론 정보 출력 타이머
         Timer traceTimer = null; // 드론 자취 기록 타이머
+        Timer logTimer = null; //드론 로그 기록 타이머
         ManualResetEvent printEvent;
         ManualResetEvent traceEvent;
+        ManualResetEvent logEvent;
         private string connectFileName = "D:\\connect.ini"; // 연결 정보 파일명
 
         public GcsModel(GcsController controller)
@@ -49,8 +53,10 @@ namespace GcsProject.Model
             droneList = new List<DroneStruct>();
             printEvent = new ManualResetEvent(false);
             traceEvent = new ManualResetEvent(false);
+            logEvent = new ManualResetEvent(false);
             printTimer = new Timer(PrintDroneInfo, printEvent, 0, 250); // 250ms 단위로 실행
             traceTimer = new Timer(OnTrace, traceEvent, 0, 2000); // 2000ms 단위로 실행
+            //logTimer = new Timer(SaveLog, logEvent, 0, 250);
         }
         /// <summary>
         /// 내부 드론 리스트에 새로운 드론을 추가
@@ -69,6 +75,7 @@ namespace GcsProject.Model
         /// <returns></returns>
         public int AddDrone(Drone drone, Connector connector)
         {
+
             if (drone != null)
             {
                 DroneStruct ds = new DroneStruct();
@@ -77,6 +84,7 @@ namespace GcsProject.Model
                 
                 droneList.Add(ds);
                 // 운행 정보 참조가 등록되어있지 않으면, 등록을 해줌
+                
                 if (printDrone == null)
                 {
                     Interlocked.Exchange(ref printDrone, drone); // 운행 정보를 출력하기 위해 해당 참조를 등록
@@ -283,6 +291,7 @@ namespace GcsProject.Model
                 controller.PrintTrace(result.id, result.componentId, result.position);
             }
         }
+        
         /// <summary>
         /// 연결 정보 파일을 읽음
         /// </summary>
@@ -341,6 +350,40 @@ namespace GcsProject.Model
                 {
                     string Selected = Encoding.ASCII.GetString(bytes, 0, size - (size > 0 ? 1 : 0));
                     return Selected.Split(new char[] { '\0' });
+                }
+            }
+        }
+
+        /// <summary>
+        /// 드론의 운행정보를 LOG기록.
+        /// </summary>
+        /// <param name="obj"></param>
+        public void SaveLog(Object obj)
+        {
+            string nowDate = DateTime.Now.ToString("yy-MM-dd HH-mm");
+            foreach (DroneStruct item in droneList)
+            {
+                string logDirPath = string.Format("D:\\Logs\\{0}\\{1}", item.drone.bindPort, DateTime.Today.ToString("yyyy-MM-dd"));
+                string logFilePath = string.Format("{0}\\{1}_log.txt", logDirPath, nowDate);
+                if (!Directory.Exists(logDirPath))
+                {
+                    Directory.CreateDirectory(logDirPath);
+                }
+                FileInfo file = new FileInfo(logFilePath);
+                string logMsg = string.Format("[{0}],{1},{2},{3},{4}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), item.drone.position.latitude
+                    , item.drone.position.longitude, item.drone.position.altitude, item.drone.groundSpeed);
+                
+                if (!file.Exists)
+                {
+                    StreamWriter sw = new StreamWriter(logFilePath);
+                    sw.WriteLine(logMsg);
+                    sw.Close();
+                }
+                else
+                {
+                    StreamWriter sw = File.AppendText(logFilePath);
+                        sw.WriteLine(logMsg);
+                        sw.Close();
                 }
             }
         }

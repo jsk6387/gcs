@@ -43,6 +43,7 @@ namespace GcsProject.Controller
         }
         private Dictionary<int, IDStruct> indexTable; // 드론을 식별하기 위해 UI의 Key 값을 
                                                       // Model의 System ID, Component ID와 매핑할 수 있도록 하는 인덱스 테이블
+       
         private static int key = 0; // Key 값
         void Awake()
         {
@@ -126,6 +127,7 @@ namespace GcsProject.Controller
         public void RemoveDrone(int key)
         {
             model.RemoveDrone(Convert.ToByte(indexTable[key].systemId), Convert.ToByte(indexTable[key].componentId));
+            indexTable.Remove(key);
         }
         /// <summary>
         /// 드론의 운행 계획을 설정함
@@ -382,23 +384,7 @@ namespace GcsProject.Controller
 
             model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
             /*
-             byte systemId = indexTable[key].systemId;
-             byte componentId = indexTable[key].componentId;
-             object[] param = new object[13];
-             param[0] = systemId;
-             param[1] = componentId;
-             param[2] = MavFrame.Global;
-             param[3] = MavCmd.NavTakeoff;
-             param[4] = (byte)1;     //current
-             param[5] = (byte)0;     // autocontinue
-             param[6] = (byte)1;      // minimum pitch
-             param[7] = null;
-             param[8] = (byte)30;
-             param[9] = (byte)1;         // yaw angle
-             param[10] = model.GetDrone(systemId, componentId).position.latitude;
-             param[11] = model.GetDrone(systemId, componentId).position.longitude;
-             param[12] =(float)model.GetDrone(systemId, componentId).position.altitude+50*1000f;
-             model.GetDroneConnecter(systemId, componentId).SendMessage(75, param);
+             
              */
            
 
@@ -408,9 +394,9 @@ namespace GcsProject.Controller
             /*
             param[0] = (ulong)0;
             param[1] = 0f;
-            param[2] = 0f;
+            param[2] = 0.0f;
             param[3] = 0f;
-            param[4] = 0f;
+            param[4] = 0.0f;
             param[5] = (float)0;
             param[6] = 0f;
             param[7] = 0f;
@@ -418,6 +404,23 @@ namespace GcsProject.Controller
             param[9] = MavMode.StabilizeArmed;
             param[10] = (byte)0;
             model.GetDroneConnecter(systemId, componentId).SendMessage(91, param);
+
+
+
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = MavCmd.ComponentArmDisarm;
+            param[3] = (byte)0;     //confirmation
+            param[4] = 1f;
+            param[5] = 1f;
+            param[6] = 0f;
+            param[7] = 0f;
+            param[8] = 0f;
+            param[9] = 0f;
+            param[10] = 0f;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
+            
+            
             
             
             param[0] = systemId;
@@ -449,54 +452,70 @@ namespace GcsProject.Controller
             param[9] = 0f;
             param[10] = 0f;
             model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
-            */
+            
 
             param[0] = systemId;
             param[1] = componentId;
             model.GetDroneConnecter(systemId, componentId).SendMessage(21, param);
-            
+            */
             param[0] = systemId;
             param[1] = componentId;
             param[2] = "FS_THR_ENABLE";
             param[3] = (float)0;
             param[4] = MavParamType.Int32;
             model.GetDroneConnecter(systemId, componentId).SendMessage(23, param);
-            /*
+            
             param[2] = "ARMING_CHECK";
             param[3] = (float)0;
             param[4] = MavParamType.Int32;
             model.GetDroneConnecter(systemId, componentId).SendMessage(23, param);
+            
 
             param[0] = systemId;
             param[1] = componentId;
             param[2] = (ushort)0;
             param[3] = MavFrame.Global;
             param[4] = MavCmd.NavTakeoff;
-            param[5] = (byte)1;     //current
+            param[5] = (byte)0;     //current
             param[6] = (byte)1;     // autocontinue
             param[7] = (float)1;      // minimum pitch
+            param[8] = null;
+            param[9] = (byte)0;
+            param[10] = (float)1;         // yaw angle
+            param[11] = model.GetDrone(systemId, componentId).position.latitude;
+            param[12] = model.GetDrone(systemId, componentId).position.longitude;
+            param[13] = 495f;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(73, param);
+            /*
+            param[0] = systemId;
+            param[1] = componentId;
+            param[2] = (ushort)1;
+            param[3] = MavFrame.Global;
+            param[4] = MavCmd.NavLand;
+            param[5] = (byte)0;     //current
+            param[6] = (byte)0;     // autocontinue
+            param[7] = (float)0;      // minimum pitch
             param[8] = null;
             param[9] = (byte)30;
             param[10] = (float)1;         // yaw angle
             param[11] = model.GetDrone(systemId, componentId).position.latitude;
             param[12] = model.GetDrone(systemId, componentId).position.longitude;
-            param[13] = (float)model.GetDrone(systemId, componentId).position.altitude + 50 * 1000f;
-            model.GetDroneConnecter(systemId, componentId).SendMessage(39, param);
-
-
+            param[13] = (float)488;
+            model.GetDroneConnecter(systemId, componentId).SendMessage(73, param);
+            */
             param[0] = systemId;
             param[1] = componentId;
             param[2] = MavCmd.MissionStart;
             param[3] = (byte)0;     //confirmation
             param[4] = 0f;
-            param[5] = 0f;
+            param[5] = 1f;
             param[6] = 0f;
             param[7] = 0f;
             param[8] = 0f;
             param[9] = 0f;
             param[10] = 0f;
             model.GetDroneConnecter(systemId, componentId).SendMessage(76, param);
-            */
+            
         }
 
     }

@@ -254,7 +254,7 @@ namespace GcsProject.Model
                         udp.SendMessage(msg);
                         break;
                     }
-                case 91:
+                case 91:    //HIL_CONTROLS
                     {
                         UasHilControls msg = new UasHilControls();
                         msg.TimeUsec = (ulong)values[0];
@@ -268,6 +268,7 @@ namespace GcsProject.Model
                         msg.Aux4 = (float)values[8];
                         msg.Mode = (MavMode)values[9];
                         msg.NavMode = (byte)values[10];
+                        udp.SendMessage(msg);
                         break;
                     }
                 default:

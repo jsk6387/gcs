@@ -4,12 +4,17 @@ using UnitySlippyMap.Map;
 using UnitySlippyMap.UserGUI;
 using UnityEngine.UI;
 using UnitySlippyMap.MyInput;
+using System.Threading;
+using System;
+using System.IO;
 using GcsProject.Controller;
+using GcsProject.Model;
 public class DroneBehavior : MonoBehaviour {
     public double[] dronePos = new double[2] ;   // drone 경도,위도,고도
     public int key=0;
     public string droneName = "";
     public Transform traceMarker;
+    private string nowDate;
     private GameObject[] gos;
     private GcsController controller;
     private DronePanelBehavior dronePanel;
@@ -20,24 +25,29 @@ public class DroneBehavior : MonoBehaviour {
     private Rect doWindowDrone;
     private bool renderWindowDrone;
     public GUIStyle style;
-    private static float zoomScale = 1.02f; // 드론 확대, 축소 비율
-    // Use this for initialization
-    
+    private static float zoomScale = 1.02f; // 드론 확대, 축소 
+    private ManualResetEvent logEvent;
+    private Timer logTimer = null; //드론 로그 기록 타이머
+
     void Start () {
-        //getDronePos();
+        
         MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
         dronePos[0]=126.88;
         dronePos[1] = 37.488;
-        dronePos = GeoHelpers.WGS84ToRaycastHit(map, dronePos); //드론의 위도,경도 위치를 화면상 위치로 변환함
-        posVec[0] = (float)dronePos[0];      // vector에 드론 위치 하나씩 저장 x : 경도 ,z : 위도 
+        dronePos = GeoHelpers.WGS84ToRaycastHit(map, dronePos);     //드론의 위도,경도 위치를 화면상 위치로 변환함
+        posVec[0] = (float)dronePos[0];                             // vector에 드론 위치 하나씩 저장 x : 경도 ,z : 위도 
         posVec[2] = (float)dronePos[1];
-        gameObject.transform.position = posVec;      // 그 후 gameobject , 즉 드론의 위치를 vector로 설정
-        
-        // 드론 마커 줌 크기 조정
-        if (int.Parse(droneKey.text) > 0)
+        gameObject.transform.position = posVec;                     // 그 후 gameobject , 즉 드론의 위치를 vector로 설정
+
+        if (int.Parse(droneKey.text) > 0)                           // 드론 마커 줌 크기 조정
             zoomScale += 0.003f * map.getMarkerCnt();
-        // guistyle color 조정
+                                                                    // guistyle color 조정
         style.normal.textColor = Color.white;
+
+
+        nowDate = DateTime.Now.ToString("yy-MM-dd HH-mm");
+        logTimer = new Timer(SaveLog, logEvent, 0, 250);
+
     }
 
     void Awake()
@@ -45,9 +55,12 @@ public class DroneBehavior : MonoBehaviour {
         controller = GameObject.Find("GameObject").GetComponent<GcsController>();
         dronePanel = GameObject.Find("GameObject").GetComponent<DronePanelBehavior>();
         btnBehavior = GameObject.Find("GameObject").GetComponent<ButtonBehavior>();
+        nowDate = DateTime.Now.ToString("yyyy-MM-dd HH-mm");
         droneKey = GameObject.Find("Key").GetComponent<Text>();
         droneKey.text = key.ToString();
         print(droneKey);
+        logEvent = new ManualResetEvent(false);
+
     }
     /// <summary>
     /// 드론 클릭시 운행정보 창 전환
@@ -82,8 +95,12 @@ public class DroneBehavior : MonoBehaviour {
         GUI.Label(new Rect(20, 20, 80, 80), " Name : " + droneName + "\n System ID : " + dronePanel.getID()[0]
                 + "\n Component ID : " + dronePanel.getID()[1], style);
     }
+
+
 	// Update is called once per frame
 	void Update () {
+
+
         SaveLoadBehavior SLB = GameObject.Find("GameObject").GetComponent<SaveLoadBehavior>();  
         if (Input.GetMouseButton(0) && !SLB.usingUI)
         {
@@ -108,6 +125,8 @@ public class DroneBehavior : MonoBehaviour {
                     }
                 }
             }
+
+
         }
         else if (Input.GetMouseButtonUp(0))
         {
@@ -151,5 +170,39 @@ public class DroneBehavior : MonoBehaviour {
         posVec[0] = (float)pos[0];
         posVec[2] = (float)pos[1];
         marker.transform.position = posVec;
+    }
+    /// <summary>
+    /// 드론의 운행정보를 LOG기록.
+    /// </summary>
+    /// <param name="obj"></param>
+    public void SaveLog(object obj)
+    {
+        GcsModel.DroneStruct model;
+        model.drone = controller.GetTraceInfo(key);
+            string logDirPath = string.Format("D:\\Logs\\{0}\\{1}", model.drone.bindPort, DateTime.Today.ToString("yyyy-MM-dd"));
+            string logFilePath = string.Format("{0}\\{1}_log.txt", logDirPath, nowDate);
+            if (!Directory.Exists(logDirPath))
+            {
+                Directory.CreateDirectory(logDirPath);
+            }
+            FileInfo file = new FileInfo(logFilePath);
+            string logMsg = string.Format("[{0}],{1},{2},{3},{4}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), model.drone.position.latitude
+                , model.drone.position.longitude, model.drone.position.altitude, model.drone.groundSpeed);
+            if (!file.Exists)
+            {
+                StreamWriter sw = new StreamWriter(logFilePath);
+                sw.WriteLine(logMsg);
+                sw.Close();
+
+            }
+            else
+            {
+                using (StreamWriter sw = File.AppendText(logFilePath))
+                {
+                    sw.WriteLine(logMsg);
+                    sw.Close();
+                }
+            }
+        
     }
 }
