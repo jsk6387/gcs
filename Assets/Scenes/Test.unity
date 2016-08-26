@@ -3905,6 +3905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9a209e8eed936b4a9e12db9801663b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playMarker: {fileID: 449416, guid: 7630ceb315c78d74ca0e933cb263bf0f, type: 2}
   runOnce: 1
   doWindowAdd:
     serializedVersion: 2
