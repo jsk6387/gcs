@@ -26,7 +26,9 @@ namespace UnitySlippyMap.UserGUI
         private DronePanelBehavior dronePanel;
         private int indexPos;
         private Timer droneTimer;
-
+        private MapBehaviour map;
+        private Vector3 posVec;
+        private static bool isPlay = false;
 
         public bool runOnce = true;
         public Rect doWindowAdd; // 드론추가 창
@@ -93,6 +95,7 @@ namespace UnitySlippyMap.UserGUI
         void Awake()
         {
             controller = GameObject.Find("GameObject").GetComponent<GcsController>();
+            map = GameObject.Find("Test").GetComponent<MapBehaviour>();
         }
         public void getLoadList(List<ConnectList.ConnectStruct> list)
         {
@@ -130,8 +133,9 @@ namespace UnitySlippyMap.UserGUI
                     break;
                 case "Play":                 // play log
                     indexPos = 0;
-                    newDrone = Instantiate(droneMarker);
+                    newDrone = Instantiate(playMarker);
                     newDrone.name = "Drone";
+                    isPlay = true;
                     Vector3 vec = new Vector3(0, 0, 0);
                     newDrone.transform.position = vec;
                     droneTimer = new Timer(replayDrone, replayLogeve, 0, 250);
@@ -390,7 +394,8 @@ namespace UnitySlippyMap.UserGUI
         // Update is called once per frame
         void Update()
         {
-           
+            if(isPlay)
+            newDrone.transform.position = posVec;
         }
         /// <summary>
         /// drone Panel의 텍스트 component들을 매칭시킨다.
@@ -602,16 +607,16 @@ namespace UnitySlippyMap.UserGUI
             double[] pos = new double[2];
             pos[0] = longtitude[indexPos];
             pos[1] = latitude[indexPos];
-            MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
             pos = GeoHelpers.WGS84ToRaycastHit(map, pos);     // drone 경도,위도를 screen 좌표로 변환
             try
             {
-                Vector3 posVec = new Vector3((float)pos[0], 0, (float)pos[1]);
-                newDrone.transform.position = posVec;
+                posVec = new Vector3((float)pos[0], 0, (float)pos[1]);
+                
             }
             catch (ArgumentNullException e)
             {
                 droneTimer.Change(Timeout.Infinite, System.Threading.Timeout.Infinite);
+                isPlay = false;
             }
             indexPos++;
         }
