@@ -36,7 +36,8 @@ class UIManager : MonoBehaviour
         PrintPlanList, // 운행 계획 리스트 출력 요청
         ConnectedComplete, // 연결 성공에 대한 이벤트 발생 요청
         PrintConnectList, // 연결 정보 리스트를 출력
-        SendID  // 드론 팝업 정보 요청
+        SendID,  // 드론 팝업 정보 요청
+        ReplayDroneMarker // 드론 log 파일 복기
     }
     public struct UIMessage
     {
@@ -109,6 +110,9 @@ class UIManager : MonoBehaviour
                 break;
             case UIMessageType.SendID:
                 dronePanel.getID((byte)msg.parameters[0], (byte)msg.parameters[1]);
+                break;
+            case UIMessageType.ReplayDroneMarker:
+                dronePanel.setDronePosByKey((int)msg.parameters[0], (double[])msg.parameters[1]);
                 break;
         }
     }

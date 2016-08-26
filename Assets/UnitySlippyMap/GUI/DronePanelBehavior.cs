@@ -5,15 +5,29 @@ using System.Collections.Generic;
 using UnitySlippyMap.Helpers;
 using UnitySlippyMap.Map;
 using UnitySlippyMap.DroneStruct;
-using GcsProject.Model;
+using System.Threading;
 
+using System;
+using System.IO;
+using UnityEditor;
 namespace UnitySlippyMap.UserGUI
 {
     public class DronePanelBehavior : MonoBehaviour
     {
 
         #region Variables
-        
+        public Transform playMarker;
+        private Transform newDrone;
+        private Text droneKeyField;
+        private string dirPath;
+        private List<double> longtitude;
+        private List<double> latitude;
+        private ManualResetEvent replayLogeve;
+        private DronePanelBehavior dronePanel;
+        private int indexPos;
+        private Timer droneTimer;
+
+
         public bool runOnce = true;
         public Rect doWindowAdd; // 드론추가 창
         public Rect doWindowConnect; // 드론 연결 창
@@ -72,6 +86,9 @@ namespace UnitySlippyMap.UserGUI
             sysList=new List<string> ();
             portList=new List<string> ();
             gcsPortList=new List<string>();
+
+            latitude = new List<double>();
+            longtitude = new List<double>();
         }
         void Awake()
         {
@@ -107,6 +124,19 @@ namespace UnitySlippyMap.UserGUI
                     deleteDrone(droneKeyField.text);
                     setDroneInfo();
                     break;
+                case "Log":                 // open Log
+                    dirPath = EditorUtility.OpenFilePanel("open log file", dirPath, "txt");
+                    readFile(dirPath);
+                    break;
+                case "Play":                 // play log
+                    indexPos = 0;
+                    newDrone = Instantiate(droneMarker);
+                    newDrone.name = "Drone";
+                    Vector3 vec = new Vector3(0, 0, 0);
+                    newDrone.transform.position = vec;
+                    droneTimer = new Timer(replayDrone, replayLogeve, 0, 250);
+                    break;
+
             }
         }
         /// <summary>
@@ -348,6 +378,12 @@ namespace UnitySlippyMap.UserGUI
                 renderAdd = true;
                 initLoad();
             }
+            if(GUI.Button(new Rect(70,40+20*listCnt,50,20),"Cancel"))
+            {
+                renderLoadList = false;
+                renderAdd = true;
+                initLoad();
+            }
         }
        
 
@@ -537,5 +573,54 @@ namespace UnitySlippyMap.UserGUI
         {
             return id;
         }
+
+        /// <summary>
+        /// 파일 불러오기.
+        /// </summary>
+        /// <param name="path"></param>
+        public void readFile(string path)
+        {
+            string tokken;
+            string[] tknArr;
+            //string delimiters = @"\[(\d+)([-])(\d+)([-])(\d+)\s+(\d+)\:(\d+)\:(\d+)\]";
+            InputField logNameField = GameObject.Find("Log Name").GetComponent<InputField>();
+            StreamReader sr = new StreamReader(path);
+            while ((tokken = sr.ReadLine()) != null)
+            {
+                tknArr = tokken.Split(',');
+                latitude.Add(double.Parse(tknArr[1]) / 1E7);
+                longtitude.Add(double.Parse(tknArr[2]) / 1E7);
+            }
+            logNameField.text = path.Substring(3);
+        }
+        /// <summary>
+        /// Log 파일 복기
+        /// </summary>
+        /// <param name="path"></param>
+        public void replayDrone(object obj)
+        {
+            double[] pos = new double[2];
+            pos[0] = longtitude[indexPos];
+            pos[1] = latitude[indexPos];
+            MapBehaviour map = GameObject.Find("Test").GetComponent<MapBehaviour>();
+            pos = GeoHelpers.WGS84ToRaycastHit(map, pos);     // drone 경도,위도를 screen 좌표로 변환
+            try
+            {
+                Vector3 posVec = new Vector3((float)pos[0], 0, (float)pos[1]);
+                newDrone.transform.position = posVec;
+            }
+            catch (ArgumentNullException e)
+            {
+                droneTimer.Change(Timeout.Infinite, System.Threading.Timeout.Infinite);
+            }
+            indexPos++;
+        }
+
+        public void replayTrace(object obj)
+        {
+
+            dronePanel.setTraceMarkerByKey(int.Parse(droneKeyField.text), new double[] { longtitude[indexPos], latitude[indexPos] });
+        }
+
     }
 }

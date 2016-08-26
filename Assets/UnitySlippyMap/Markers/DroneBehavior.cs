@@ -179,30 +179,28 @@ public class DroneBehavior : MonoBehaviour {
     {
         GcsModel.DroneStruct model;
         model.drone = controller.GetTraceInfo(key);
-            string logDirPath = string.Format("D:\\Logs\\{0}\\{1}", model.drone.bindPort, DateTime.Today.ToString("yyyy-MM-dd"));
-            string logFilePath = string.Format("{0}\\{1}_log.txt", logDirPath, nowDate);
-            if (!Directory.Exists(logDirPath))
-            {
-                Directory.CreateDirectory(logDirPath);
-            }
-            FileInfo file = new FileInfo(logFilePath);
-            string logMsg = string.Format("[{0}],{1},{2},{3},{4}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), model.drone.position.latitude
-                , model.drone.position.longitude, model.drone.position.altitude, model.drone.groundSpeed);
-            if (!file.Exists)
-            {
-                StreamWriter sw = new StreamWriter(logFilePath);
-                sw.WriteLine(logMsg);
-                sw.Close();
+        string logDirPath = string.Format("D:\\Logs\\{0}\\{1}", model.drone.bindPort, DateTime.Today.ToString("yyyy-MM-dd"));
+        string logFilePath = string.Format("{0}\\{1}_log.txt", logDirPath, nowDate);
 
-            }
-            else
-            {
-                using (StreamWriter sw = File.AppendText(logFilePath))
-                {
-                    sw.WriteLine(logMsg);
-                    sw.Close();
-                }
-            }
-        
+        if (!Directory.Exists(logDirPath))
+        {
+            Directory.CreateDirectory(logDirPath);
+        }
+        FileInfo file = new FileInfo(logFilePath);
+        string logMsg = string.Format("[{0}],{1},{2},{3},{4}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), model.drone.position.latitude
+            , model.drone.position.longitude, model.drone.position.altitude, model.drone.groundSpeed);
+        if (!file.Exists)
+        {
+            StreamWriter sw = new StreamWriter(logFilePath);
+            sw.WriteLine(logMsg);
+            sw.Close();
+
+        }
+        else
+        {
+            StreamWriter sw = File.AppendText(logFilePath);
+            sw.WriteLine(logMsg);
+            sw.Close();
+        }
     }
 }

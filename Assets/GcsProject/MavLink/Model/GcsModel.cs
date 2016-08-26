@@ -5,7 +5,6 @@
 using GcsProject.Controller;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text;
 using System;
@@ -41,10 +40,8 @@ namespace GcsProject.Model
         private static object locker = new object();
         Timer printTimer = null; // 드론 정보 출력 타이머
         Timer traceTimer = null; // 드론 자취 기록 타이머
-        Timer logTimer = null; //드론 로그 기록 타이머
         ManualResetEvent printEvent;
         ManualResetEvent traceEvent;
-        ManualResetEvent logEvent;
         private string connectFileName = "D:\\connect.ini"; // 연결 정보 파일명
 
         public GcsModel(GcsController controller)
@@ -53,10 +50,8 @@ namespace GcsProject.Model
             droneList = new List<DroneStruct>();
             printEvent = new ManualResetEvent(false);
             traceEvent = new ManualResetEvent(false);
-            logEvent = new ManualResetEvent(false);
             printTimer = new Timer(PrintDroneInfo, printEvent, 0, 250); // 250ms 단위로 실행
             traceTimer = new Timer(OnTrace, traceEvent, 0, 2000); // 2000ms 단위로 실행
-            //logTimer = new Timer(SaveLog, logEvent, 0, 250);
         }
         /// <summary>
         /// 내부 드론 리스트에 새로운 드론을 추가
@@ -353,40 +348,7 @@ namespace GcsProject.Model
                 }
             }
         }
-
-        /// <summary>
-        /// 드론의 운행정보를 LOG기록.
-        /// </summary>
-        /// <param name="obj"></param>
-        public void SaveLog(Object obj)
-        {
-            string nowDate = DateTime.Now.ToString("yy-MM-dd HH-mm");
-            foreach (DroneStruct item in droneList)
-            {
-                string logDirPath = string.Format("D:\\Logs\\{0}\\{1}", item.drone.bindPort, DateTime.Today.ToString("yyyy-MM-dd"));
-                string logFilePath = string.Format("{0}\\{1}_log.txt", logDirPath, nowDate);
-                if (!Directory.Exists(logDirPath))
-                {
-                    Directory.CreateDirectory(logDirPath);
-                }
-                FileInfo file = new FileInfo(logFilePath);
-                string logMsg = string.Format("[{0}],{1},{2},{3},{4}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), item.drone.position.latitude
-                    , item.drone.position.longitude, item.drone.position.altitude, item.drone.groundSpeed);
-                
-                if (!file.Exists)
-                {
-                    StreamWriter sw = new StreamWriter(logFilePath);
-                    sw.WriteLine(logMsg);
-                    sw.Close();
-                }
-                else
-                {
-                    StreamWriter sw = File.AppendText(logFilePath);
-                        sw.WriteLine(logMsg);
-                        sw.Close();
-                }
-            }
-        }
+        
         /// <summary>
         /// 연결 정보 파일을 작성
         /// </summary>
@@ -397,7 +359,7 @@ namespace GcsProject.Model
         {
             if (section.Equals("__currentDate")) // 현재 일시를 기준으로 섹션명을 생성
             {
-                section = DateTime.Now.ToString("yyyyMMddHHmm");
+                section =data.bindPort.ToString();
             }
             try
             {
